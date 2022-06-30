@@ -8,9 +8,9 @@ replicaCount: 1
 label_org: "ibm"
 
 image:
-  name: "<yet to update>"
+  name: ibm-test
   pullPolicy: IfNotPresent
-  tag: "<yet to update>"
+  tag: latest
 
 probe:
   initialdelay: 10

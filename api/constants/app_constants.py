@@ -1,5 +1,11 @@
 ''' This file holds the constants used in this project '''
 
+#-------------- GENERIC CONSTANTS --------------
+
+IP = "0.0.0.0"
+PORT = 5000
+DEBUG_VAL = True
+
 #-------------- CONSTRUCTING JSON DATA CONSTANTS --------------
 
 ORG_NAMES = ('ABC', 'MyTech', 'OrgONE', 'InterNetworks')
@@ -13,6 +19,10 @@ UP = "UP"
 HEALTH = "/health"
 API_POST = "/feedback"
 API_GET = "/results"
+API_GET_TOKEN = "/token"
+
+#-------------- AUTHENTICATION RELATED --------------
+auth_key = 'f5WXr9nkRdnYvQ' 
 
 #-------------- OTHER CONSTANTS --------------
 FILE_PATH = '/src/api/data/feeds.json'
@@ -21,12 +31,15 @@ LOG_PATH = '/src/api/logs'
 LOG_FORMATTER = "[%(asctime)s] [%(levelname)s] [%(funcName)s:%(lineno)d ]: %(message)s"
 #-------------- STATUS CODES -----------
 from enum import Enum
+from http.client import UNAUTHORIZED
 class StatusCodes(Enum):
     SUCCESS = 200
     CREATED = 201
     NOT_FOUND = 404
     UNEXPECTED = 409
     SERVER_ERROR = 500
+    UNAUTHORIZED = 401
+    FORBIDDEN = 403
 
 
 #-------------- MESSAGES --------------    

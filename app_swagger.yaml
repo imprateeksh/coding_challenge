@@ -1,23 +1,78 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
   description: "This document expalins about the endpoints used in creating this basic app."
-  version: "1.0.0"
+  version: "0.1"
   title: "Feedback API"
   contact:
     email: "sharma_prateek@outlook.com"
-host: "petstore.swagger.io"
-
-tags:
-- name: "IBM: Coding Challenge"
-  description: "Basic app"
-schemes:
-- "http"
 paths:
+  /health:
+    get:
+      tags: ["secret"]
+      security:
+        - bearerAuth: []
+      description: "This endpoint provides health information of API"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "UP"}
+  /token:
+    get:
+      tags: ["secret"]
+      security:
+        - bearerAuth: []
+      description: "This endpoint provides JWT token for API authentication"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "Url"
+        name: "query-parameter"
+        description: "Status of API will be shown as Up if running."
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"token": "token_value"}
+        "500":
+          description: "Server Error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Not able to create token"}
+
   /feedback:
     post:
-      tags:
-      - "feedback"
-      summary: "Store new feedback results."
+      tags: ["secret"]
+      security:
+        - bearerAuth: []
       description: "This endpoint creates and stores the randomly generated feedback to a file."
       produces:
       - "application/json"
@@ -25,117 +80,97 @@ paths:
       - in: "body"
         name: "body"
         description: "Feedback data will be added."
-        required: false
-        schema:
-          $ref: "#/definitions/Pet"
       responses:
         "201":
           description: "Created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Feedback added successfully."}
         "404":
           description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Data storage file is not present."}
         "500":
           description: "Server Error"
-
-  /pet/findByStatus:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Failed to store data."}
+  /results:
     get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
+      tags: ["secret"]
+      security:
+        - bearerAuth: []
+      description: "This endpoint retrieves the randomly generated feedback from json file."
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
+      - in: "body"
+        name: "body"
+        description: "Feedback data will be fetched."
       responses:
         "200":
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        "400":
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    type: 
+        "404":
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Data storage file is not present."}
+        "500":
+          description: "Server Error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                "0":
+                  value: |
+                    {"status": "Failed to store data."}
  
- 
-securityDefinitions:
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-definitions:
-
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          name: "photoUrl"
-          wrapped: true
-        items:
-          type: "string"
-      tags:
-        type: "array"
-        xml:
-          name: "tag"
-          wrapped: true
-        items:
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
