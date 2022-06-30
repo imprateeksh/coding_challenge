@@ -1,41 +1,46 @@
 import random
 import uuid
+import json
+import os
 from constants import app_constants as const
 from utils.custom_exceptions import FileMissingError, GenericError, DataMissingError
-import os
+from utils.util_logger import Logger
 
-# TO DO : 
-# CREATE FILE IF NOT EXISTS
 
 class FeedbackOperations:
 
     def __init__(self):
         self.data_dict = dict()
-        self._create_filepath()
     
-    def _create_filepath(self):
-        if not os.path.exists(const.FILE_PATH):
-            pass
 
-    def create_feedback(self):
+    def _create_feedback(self):
         ''' Construct random json data'''
 
         self.data_dict["id"] = str(uuid.uuid1())
         self.data_dict["org"] = random.choice(const.ORG_NAMES)
         self.data_dict["rating"] = random.choice(const.RATING)
         self.data_dict["opinion"] = random.choice(const.OPINION)
-        self.data_dict["pros"] = random.choices(const.PROS, k=3)
-        self.data_dict["cons"] = random.choices(const.CONS, k=3)
+        self.data_dict["pros"] = random.sample(const.PROS, 3)
+        self.data_dict["cons"] = random.sample(const.CONS, 3)
+
+        Logger.info(f"Created data: {self.data_dict}")
         return self.data_dict
 
     def store_feedback(self):
         try:
+            Logger.info("Initiating data storage...")
+            self._create_feedback()
             with open(const.FILE_PATH, 'a') as f:
-                f.write(self.data_dict)
+                f.write(json.dumps(self.data_dict))
+                Logger.info("Added data successfully")
                 return const.FEEDBACK_ADDED
-        except FileNotFoundError:
+
+        except FileNotFoundError as ex:
+            Logger.error(f"Error seen is : {str(ex)}")
             raise FileMissingError(const.FILE_MISS_ERROR_MSG)
-        except Exception:
+            
+        except Exception as ex:
+            Logger.error(f"Error seen is : {str(ex)}")
             raise GenericError(const.UNEXPECTED_ERROR)
     
     def get_feedback(self):
@@ -43,22 +48,16 @@ class FeedbackOperations:
 
         try:
             with open(const.FILE_PATH, 'r') as f:
-                data = f.read()            
-            
-            if not data:
-                raise DataMissingError(const.EMPTY_DATA)
-            
-            return data
-        
-        except FileNotFoundError:
+                data = f.read()                
+                if not data:
+                    raise DataMissingError(const.EMPTY_DATA)                
+                Logger.info(f"Data retrieved successfully: \t {data}")
+                return data
+
+        except FileNotFoundError as ex:
+            Logger.error(f"Error seen is : {str(ex)}")
             raise FileMissingError(const.FILE_MISS_ERROR_MSG)
 
-        except Exception:
+        except Exception as ex:
+            Logger.error(f"Error seen is : {str(ex)}")
             raise GenericError(const.UNEXPECTED_ERROR)
-
-
-# o = FeedbackOperations()
-# print(o.get_feedback())
-# print('*' * 10)
-# print(o.get_feedback())
-# print('*' * 10)

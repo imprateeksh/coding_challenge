@@ -1,0 +1,33 @@
+# Default values for ibm-basic-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+name: ibm-basic-app
+namespace: ibm-test
+replicaCount: 1
+label_org: "ibm"
+
+image:
+  name: "<yet to update>"
+  pullPolicy: IfNotPresent
+  tag: "<yet to update>"
+
+probe:
+  initialdelay: 10
+  period: 10
+
+volume:
+  mountPath: /src/api/data
+  name: ibm-basic-vol
+  hpath: /tmp
+  hpathType: Directory
+
+persistence:
+  name: ibm-basic-pvc
+
+service:
+  name: ibm-basic-app
+  type: NodePort
+  nodePort: 32040
+  port: 80
+  target_port: 5000

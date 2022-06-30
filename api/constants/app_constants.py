@@ -11,11 +11,14 @@ CONS = ['Not a healthy work environment', 'Less pay', 'No Learning opportunities
 #-------------- ENDPOINT SPECIFIC INFORMATION --------------
 UP = "UP"
 HEALTH = "/health"
-API_FEEDBACK = "/feedback"
+API_POST = "/feedback"
+API_GET = "/results"
 
 #-------------- OTHER CONSTANTS --------------
-FILE_PATH = '/src/data/feeds.yaml'
+FILE_PATH = '/src/api/data/feeds.json'
+LOG_PATH = '/src/api/logs'
 
+LOG_FORMATTER = "[%(asctime)s] [%(levelname)s] [%(funcName)s:%(lineno)d ]: %(message)s"
 #-------------- STATUS CODES -----------
 from enum import Enum
 class StatusCodes(Enum):

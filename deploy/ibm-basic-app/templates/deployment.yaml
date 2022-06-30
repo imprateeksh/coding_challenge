@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      org-test: {{ .Values.label_org }}
+  template:
+    metadata:
+      labels:
+        org-test: {{ .Values.label_org }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.probe.initialdelay}}
+            periodSeconds: {{ .Values.probe.period}}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.probe.initialdelay}}
+            periodSeconds: {{ .Values.probe.period}}
+          volumeMounts:
+            - mountPath: {{ .Values.volume.mountPath }}
+              name: {{ .Values.volume.name }}
+      volumes:
+        - name: {{ .Values.volume.name }}
+          hostPath:
+            path: {{ .Values.volume.hpath }}
+            type: {{ .Values.volume.hpathType }}
+        # - name: {{ .Values.persistence.name }}
+        #   persistentVolumeClaim:
+        #     claimName: {{ .Values.persistence.name }}
+
