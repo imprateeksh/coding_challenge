@@ -1,0 +1,12 @@
+gradle{
+    customBuildCommand  = 'start_test'
+    gradle_tool         = 'gradle5.4.1'
+    source_deployment_folder = 'deploy/ibm-basic-app'
+    manifest_file_name    = 'basic-app-manifest.yaml'
+    manifest_folder    = 'deploy/ibm-basic-app/deployment_manifest'
+    deploymentType   = ['yaml', 'helm']
+    dockerfilesReference   = ['ibm-test': '.']
+    dockerImageReferences  = ['ibm-test': ['image.repository','image.tag']]
+    imageReferenceList  = ['image.repository:image.tag']
+    tagReferenceList  = ['image.tag']
+}

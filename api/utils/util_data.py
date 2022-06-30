@@ -27,6 +27,7 @@ class FeedbackOperations:
         return self.data_dict
 
     def store_feedback(self):
+        ''' Method to save data to a file'''
         try:
             Logger.info("Initiating data storage...")
             self._create_feedback()

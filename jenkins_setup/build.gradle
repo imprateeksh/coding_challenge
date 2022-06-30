@@ -1,0 +1,24 @@
+// add various tasks here to use in Jenkins steps
+// THis is not complete file 
+
+python {
+    pythonBinary = 'python3'
+}
+
+task start_test(dependsOn: ['create_log_dir', 'create_log_file'])
+
+task install_packages(type:PythonTask){
+
+}
+
+task install_test_packages(type: PythonTask) {
+
+}
+
+task create_log_file(){
+
+}
+
+task create_log_dir(){
+
+}

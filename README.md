@@ -19,6 +19,7 @@ Docker file push to artifactory
 Use gradle script to start build creation
 Use Jenkins file to start project and progress
 Configuring Jenkins
+FMEAs
 -------------------
 Unit tests
 Bdd creation – feature files (extra)

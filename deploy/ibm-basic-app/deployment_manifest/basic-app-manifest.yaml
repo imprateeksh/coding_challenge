@@ -1,0 +1,8 @@
+---
+app:
+  name: ibm-basic-app
+  version: 1.0.0
+  release: 1a2b3c4
+  helm_package: ibm-basic-app-1.0.0-1a2b3c4
+  helm_arguments: null
+  helm_override_values: null

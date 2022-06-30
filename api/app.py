@@ -8,12 +8,12 @@ from utils.util_token import create_token, authenticate_token
 
 app = Flask(__name__)
 
-@app.route(const.API_GET_TOKEN)
+@app.route(const.API_GET_TOKEN, methods = ["GET"])
 def get_token():
     token = create_token()
     if not token:
         return make_response(jsonify(status = "Not able to create token"), StatusCodes.SERVER_ERROR)
-    return make_response(jsonify(token = token), StatusCodes.SUCCESS)
+    return {"tok": token}
 
 @app.route(const.HEALTH)
 def health_status():
@@ -21,8 +21,9 @@ def health_status():
 
     return make_response(jsonify(status = const.UP), StatusCodes.SUCCESS.value)
 
-@authenticate_token
+
 @app.route(const.API_GET, methods = ["GET"])
+@authenticate_token
 def get_data():
     ''' Method to fetch data stored '''
 
@@ -44,8 +45,8 @@ def get_data():
         return make_response(jsonify(status = const.GENERIC_RESPONSE_MESSAGE.format(ops="fetch")), StatusCodes.SERVER_ERROR.value)
             
 
-@authenticate_token
 @app.route(const.API_POST, methods = ["POST"])
+@authenticate_token
 def store_data():
     ''' Method to store data '''
     try:        

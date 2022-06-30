@@ -38,7 +38,7 @@ paths:
       - "application/json"
       parameters:
       - in: "Url"
-        name: "query-parameter"
+        name: "get token"
         description: "Status of API will be shown as Up if running."
       responses:
         "200":

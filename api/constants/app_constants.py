@@ -49,3 +49,7 @@ EMPTY_DATA = "Empty data.Nothing present as of now."
 FEEDBACK_ADDED = "Feedback added successfully."
 FILE_MISS_ERROR_MSG = "Data storage file is not present."
 UNEXPECTED_ERROR = "Unexpected error occurred."
+
+HEADER_MISSING = {"message": "API Header information is missing."}
+TOKEN_MISSING = {"message": "API Token not present in header."}
+TOKEN_EXPIRED = "Error: Token Expired, 403"
