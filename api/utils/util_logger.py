@@ -7,22 +7,26 @@ from constants import app_constants as const
 if not os.path.isdir(const.LOG_PATH):
     os.mkdir(const.LOG_PATH)
 
-INFO_LOG = const.LOG_PATH + "/info.log"
-ERROR_LOG = const.LOG_PATH + "/error.log"
-
 class Logger:
 
     def __init__(self):
-        Logger.create_logger(logger_name="info", file_name= INFO_LOG, level="info")
-        Logger.create_logger(logger_name="error", file_name= ERROR_LOG, level="error")
+        Logger.create_logger(
+            logger_name="info_log", 
+            file_name= const.LOG_PATH + "/info.log", 
+            log_level="info")
+
+        Logger.create_logger(
+            logger_name="error_log", 
+            file_name= const.LOG_PATH + "/error.log", 
+            log_level="error")
 
     @staticmethod
-    def create_logger(logger_name, file_name, level):
-        if level == "info":
-            level = logging.INFO
+    def create_logger(logger_name, file_name, log_level):
+        if log_level == "info":
+            log_level = logging.INFO
 
-        if level == "error":
-            level = logging.ERROR
+        if log_level == "error":
+            log_level = logging.ERROR
         
         log_val = logging.getLogger(logger_name)
         formatter = logging.Formatter(const.LOG_FORMATTER)
@@ -33,7 +37,7 @@ class Logger:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
 
-        log_val.setLevel(level)
+        log_val.setLevel(log_level)
 
         if not log_val.hasHandlers():
             log_val.addHandler(file_handler)

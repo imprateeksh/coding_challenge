@@ -3,15 +3,19 @@ from utils.util_data import FeedbackOperations
 from constants import app_constants as const
 from constants.app_constants import StatusCodes
 from utils.custom_exceptions import FileMissingError, DataMissingError
-from utils.util_logger import Logger as log
+from utils.util_logger import Logger
 from utils.util_token import create_token, authenticate_token
 
 app = Flask(__name__)
 
+log = Logger()
+
 @app.route(const.API_GET_TOKEN, methods = ["GET"])
 def get_token():
     token = create_token()
+    # log.info(f"Token created as : {token}")
     if not token:
+        log.error("Unable to create Token")
         return make_response(jsonify(status = "Not able to create token"), StatusCodes.SERVER_ERROR)
     return {"tok": token}
 
@@ -30,6 +34,7 @@ def get_data():
     try:
         obj = FeedbackOperations()
         response = obj.get_feedback()
+        log.info("Getting data from json file")
         return make_response(response, StatusCodes.SUCCESS.value)
             
     except FileMissingError as ex:
@@ -52,10 +57,13 @@ def store_data():
     try:        
         objdata = FeedbackOperations()
         resp = objdata.store_feedback()
+        log.info("Data stored successfully")
         return make_response(jsonify(status = resp), StatusCodes.CREATED.value)
+    
     except FileMissingError as ex:
         log.error(str(ex))
         return make_response(jsonify(status = const.FILE_MISS_ERROR_MSG), StatusCodes.NOT_FOUND.value)
+    
     except Exception as ex:
         log.error(const.GENERIC_ERROR.format(action="store", err = ex))
         return make_response(jsonify(status = const.GENERIC_RESPONSE_MESSAGE.format(ops="store")), StatusCodes.SERVER_ERROR.value)

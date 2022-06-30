@@ -8,9 +8,9 @@ replicaCount: 1
 label_org: "ibm"
 
 image:
-  name: ibm-test
+  name: iamprateeksh/test-basic-app  #ibm-test
   pullPolicy: IfNotPresent
-  tag: latest
+  tag: "2.0"
 
 probe:
   initialdelay: 10
@@ -27,7 +27,8 @@ persistence:
 
 service:
   name: ibm-basic-app
+  protocol: TCP
   type: NodePort
   nodePort: 32040
-  port: 80
+  port: 8080
   target_port: 5000

@@ -7,10 +7,11 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: http
       nodePort: {{ .Values.service.nodePort }}
-      protocol: TCP
-      name: http
+      port: {{ .Values.service.port }}
+      protocol: {{ .Values.service.protocol }}
+      targetPort: {{ .Values.service.target_port }}
+      
   selector:
     org-test: {{ .Values.label_org }}

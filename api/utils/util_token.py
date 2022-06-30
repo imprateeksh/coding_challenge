@@ -9,11 +9,14 @@ from utils.util_logger import Logger
 import secrets
 from flask import request
 
+log = Logger()
+
 def create_token():
     ''' This method generates the token required. '''
     token = ''
     try:
         id = secrets.token_urlsafe(10)
+        log.info("Create token initiated.")
         token = jwt.encode(
             {
                 'random_id': id, 
@@ -22,7 +25,7 @@ def create_token():
             key= const.auth_key)
 
     except Exception as ex:
-        Logger.error("Error while creating token")
+        log.error("Error while creating token")
     finally:
         return token
 
@@ -32,7 +35,7 @@ def authenticate_token(func):
     @wraps(func)
     def inner_func(*args, **kwargs):
         ''' Provide token in form of Auth Bearer like Authorization : Bearer abcd123'''
-        
+
         header = request.headers.get('Authorization')
         if not header:
             raise HeaderMissingError(const.HEADER_MISSING)
@@ -44,14 +47,14 @@ def authenticate_token(func):
             val = jwt.decode('token', key = const.auth_key, algorithms = ["HS256"])
 
         except HeaderMissingError:
-            Logger.error(const.HEADER_MISSING)
+            log.error(const.HEADER_MISSING)
         except TokenMissingError:
-            Logger.error(const.TOKEN_MISSING)
+            log.error(const.TOKEN_MISSING)
         except jwt.ExpiredSignatureError:
-            Logger.error(const.TOKEN_EXPIRED)
+            log.error(const.TOKEN_EXPIRED)
             raise TokenExpiredError("Token Expired")
         except Exception:
-            Logger.error("Error: Invalid Token value, 401")            
+            log.error("Error: Invalid Token value, 401")            
             raise InvalidTokenError("Invalid Token")
         return func(*args, **kwargs)
     return inner_func
