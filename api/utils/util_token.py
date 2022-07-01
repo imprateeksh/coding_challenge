@@ -36,7 +36,7 @@ def authenticate_token(func):
     def inner_func(*args, **kwargs):
         ''' Provide token in form of Auth Bearer like Authorization : Bearer abcd123'''
 
-        header = request.headers.get('Authorization')
+        header = request.headers['Authorization']
         log.info(f"Header info received: {header}")
         if not header:
             raise HeaderMissingError(const.HEADER_MISSING)
@@ -45,7 +45,7 @@ def authenticate_token(func):
             if not token:
                 raise TokenMissingError(const.TOKEN_MISSING)
 
-            val = jwt.decode('token', key = const.auth_key, algorithms = ["HS256"])
+            val = jwt.decode(token, key = const.auth_key, algorithms = ["HS256"])
 
         except (HeaderMissingError,TokenMissingError) as ex:
             log.error(str(ex))
