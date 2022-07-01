@@ -10,7 +10,7 @@ label_org: "ibm"
 image:
   name: iamprateeksh/test-basic-app  #ibm-test
   pullPolicy: IfNotPresent
-  tag: "2.0"
+  tag: "3.0"
 
 probe:
   initialdelay: 10
