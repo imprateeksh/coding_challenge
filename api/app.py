@@ -66,7 +66,8 @@ def store_data():
     
     except Exception as ex:
         log.error(const.GENERIC_ERROR.format(action="store", err = ex))
-        return make_response(jsonify(status = const.GENERIC_RESPONSE_MESSAGE.format(ops="store")), StatusCodes.SERVER_ERROR.value)
+        # return make_response(jsonify(status = const.GENERIC_RESPONSE_MESSAGE.format(ops="store")), StatusCodes.SERVER_ERROR.value)
+        return make_response(jsonify(status = str(ex)), StatusCodes.SERVER_ERROR.value)
 
 
 if __name__ == "__main__":

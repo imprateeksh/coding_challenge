@@ -20,12 +20,12 @@ def create_token():
         token = jwt.encode(
             {
                 'random_id': id, 
-                'exp': datetime.utcnow() + timedelta(minutes=5)
+                'exp': datetime.utcnow() + timedelta(minutes=15)
             },
             key= const.auth_key)
 
     except Exception as ex:
-        log.error("Error while creating token")
+        log.error(f"Error while creating token: \n {str(ex)}")
     finally:
         return token
 
@@ -37,24 +37,28 @@ def authenticate_token(func):
         ''' Provide token in form of Auth Bearer like Authorization : Bearer abcd123'''
 
         header = request.headers.get('Authorization')
+        log.info(f"Header info received: {header}")
         if not header:
             raise HeaderMissingError(const.HEADER_MISSING)
         try:
-            _, token = header.split()
+            _, token = header.split() # Bearer: Tok
             if not token:
                 raise TokenMissingError(const.TOKEN_MISSING)
 
             val = jwt.decode('token', key = const.auth_key, algorithms = ["HS256"])
 
-        except HeaderMissingError:
-            log.error(const.HEADER_MISSING)
-        except TokenMissingError:
-            log.error(const.TOKEN_MISSING)
-        except jwt.ExpiredSignatureError:
-            log.error(const.TOKEN_EXPIRED)
-            raise TokenExpiredError("Token Expired")
-        except Exception:
-            log.error("Error: Invalid Token value, 401")            
-            raise InvalidTokenError("Invalid Token")
+        except (HeaderMissingError,TokenMissingError) as ex:
+            log.error(str(ex))
+            return str(ex)
+
+        except jwt.ExpiredSignatureError as ex:
+            log.error(f"Token Expired: {str(ex)}")
+            return str(ex)
+
+        except Exception as ex:
+            log.error(str(ex))
+            return str(ex)
+
         return func(*args, **kwargs)
+
     return inner_func
